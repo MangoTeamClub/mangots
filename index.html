@@ -7,9 +7,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #1e88e5;
-            --primary-dark: #1565c0;
-            --primary-light: rgba(30, 136, 229, 0.1);
+            --primary: #FFA500;
+            --primary-dark: #E69500;
+            --primary-light: rgba(255, 165, 0, 0.1);
             --dark-bg: #121212;
             --dark-surface: #1e1e1e;
             --dark-surface-hover: #2a2a2a;
@@ -20,10 +20,7 @@
             --error: #cf6679;
             --success: #4caf50;
             --warning: #ff9800;
-            --elevation-1: 0 2px 10px rgba(0,0,0,0.3);
-            --elevation-2: 0 4px 15px rgba(0,0,0,0.2);
-            --elevation-3: 0 8px 20px rgba(0,0,0,0.25);
-            --border-radius: 12px;
+            --border-radius: 8px;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
@@ -56,7 +53,6 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: var(--elevation-1);
             border-bottom: 1px solid var(--divider);
             display: flex;
             align-items: center;
@@ -86,13 +82,11 @@
             border-radius: var(--border-radius);
             font-size: 16px;
             outline: none;
-            box-shadow: var(--elevation-2);
             transition: var(--transition);
         }
         
         .search-input:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(30, 136, 229, 0.3);
         }
         
         .search-btn {
@@ -108,16 +102,10 @@
             font-size: 14px;
             font-weight: bold;
             transition: var(--transition);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         
         .search-btn:hover {
             background-color: var(--primary-dark);
-            transform: translateY(-1px);
-        }
-        
-        .search-btn:active {
-            transform: translateY(0);
         }
         
         .tab-bar {
@@ -126,7 +114,6 @@
             border-radius: var(--border-radius);
             overflow: hidden;
             background-color: var(--dark-surface);
-            box-shadow: var(--elevation-2);
         }
         
         .tab-btn {
@@ -172,7 +159,6 @@
             margin-top: 15px;
             background-color: var(--dark-surface);
             border-radius: var(--border-radius);
-            box-shadow: var(--elevation-2);
             overflow: hidden;
             border: 1px solid var(--divider);
         }
@@ -200,7 +186,6 @@
             border-radius: 6px;
             object-fit: cover;
             margin-right: 20px;
-            box-shadow: var(--elevation-1);
             transition: transform 0.3s ease;
         }
         
@@ -305,7 +290,7 @@
         }
         
         .loading-spinner {
-            border: 3px solid rgba(30, 136, 229, 0.2);
+            border: 3px solid rgba(255, 165, 0, 0.2);
             border-top: 3px solid var(--primary);
             border-radius: 50%;
             width: 24px;
@@ -338,7 +323,6 @@
         
         .back-btn:hover {
             color: var(--primary);
-            transform: translateX(-2px);
         }
         
         .page-controls {
@@ -357,13 +341,11 @@
             cursor: pointer;
             font-size: 14px;
             transition: var(--transition);
-            box-shadow: var(--elevation-1);
         }
         
         .page-btn:hover:not(:disabled) {
             background-color: var(--primary);
             border-color: var(--primary);
-            transform: translateY(-1px);
         }
         
         .page-btn:disabled {
@@ -415,7 +397,6 @@
             right: 0;
             background-color: var(--dark-surface);
             padding: 15px 20px;
-            box-shadow: var(--elevation-3);
             z-index: 100;
             border-top: 1px solid var(--divider);
             transform: translateY(0);
@@ -466,7 +447,6 @@
             border-radius: 8px;
             margin-top: 20px;
             border: 1px solid var(--divider);
-            box-shadow: var(--elevation-1);
         }
         
         .batch-download-header {
@@ -491,12 +471,10 @@
             cursor: pointer;
             font-size: 14px;
             transition: var(--transition);
-            box-shadow: var(--elevation-1);
         }
         
         .batch-download-btn:hover {
             background-color: var(--primary-dark);
-            transform: translateY(-1px);
         }
         
         .batch-download-btn:disabled {
@@ -554,7 +532,6 @@
         
         .player-btn:hover {
             background-color: rgba(255, 255, 255, 0.1);
-            transform: scale(1.1);
         }
         
         .player-btn:disabled {
@@ -584,6 +561,69 @@
         .empty-text {
             font-size: 16px;
             margin-bottom: 20px;
+        }
+        
+        /* 帮助图标样式 */
+        .help-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 30px;
+            height: 30px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1000;
+        }
+        
+        /* 弹窗样式 */
+        .help-modal {
+            display: none;
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            width: 300px;
+            background-color: var(--dark-surface);
+            border-radius: 5px;
+            z-index: 1000;
+            padding: 15px;
+            border: 1px solid var(--divider);
+        }
+        
+        .help-modal h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+        
+        .help-modal p {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        /* 遮罩层样式 */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.3);
+            z-index: 999;
+        }
+        
+        /* 关闭按钮样式 */
+        .close-btn {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-secondary);
         }
         
         /* 响应式调整 */
@@ -692,6 +732,23 @@
             <button class="player-btn" id="shelfToggleBtn" title="加入书架"><i class="far fa-bookmark"></i></button>
         </div>
     </div>
+    
+    <!-- 帮助图标和说明 -->
+    <div class="help-icon" id="helpIcon">?</div>
+    
+    <div class="help-modal" id="helpModal">
+        <span class="close-btn" id="closeBtn">&times;</span>
+        <h3>Mango听书使用说明</h3>
+        <p>1. ©2022-2025 Mango</p>
+        <p>2. 本站不收集任何信息，最终解释权在法律之内归Mango所有</p>
+        <p>3. 可以下载音频，在文件管理Download文件夹查看</p>
+        <p>4. 在搜索点一本书时，目录显示在书架上</p>
+        <p>5.当前书源应该仅支持番茄，下个版本更新喜马拉雅</p>
+        <p>6.有任何问题联系我</p>
+        <p>7.基于zc听书https://zcfx.vvvv.ee/zcts</p>
+    </div>
+    
+    <div class="overlay" id="overlay"></div>
 
     <script>
         // 全局变量
@@ -735,6 +792,12 @@
         const shelfList = document.getElementById('shelfList');
         const historyList = document.getElementById('historyList');
         const exploreBooksBtn = document.getElementById('exploreBooksBtn');
+        
+        // 帮助系统
+        const helpIcon = document.getElementById('helpIcon');
+        const helpModal = document.getElementById('helpModal');
+        const closeBtn = document.getElementById('closeBtn');
+        const overlay = document.getElementById('overlay');
         
         // 初始化本地存储
         function initStorage() {
@@ -831,7 +894,7 @@
                 shelfList.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-icon"><i class="fas fa-book-open"></i></div>
-                        <div class="empty-text">书架空空如也（请点击右上“？”查看说明）</div>
+                        <div class="empty-text">书架空空如也（请点击右上"？"查看说明）</div>
                         <button class="page-btn" id="exploreBooksBtn">去发现好书</button>
                     </div>
                 `;
@@ -969,6 +1032,22 @@
         searchTab.addEventListener('click', () => switchTab('search'));
         shelfTab.addEventListener('click', () => switchTab('shelf'));
         historyTab.addEventListener('click', () => switchTab('history'));
+        
+        // 帮助系统事件
+        helpIcon.addEventListener('click', function() {
+            helpModal.style.display = 'block';
+            overlay.style.display = 'block';
+        });
+        
+        closeBtn.addEventListener('click', function() {
+            helpModal.style.display = 'none';
+            overlay.style.display = 'none';
+        });
+        
+        overlay.addEventListener('click', function() {
+            helpModal.style.display = 'none';
+            overlay.style.display = 'none';
+        });
         
         // 切换标签
         function switchTab(tab) {
@@ -1584,207 +1663,3 @@
     </script>
 </body>
 </html>
-    <title>公告弹窗</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        .announcement-popup {
-            position: fixed;
-            top: 350px;
-            left: -400px; 
-            width: 300px;
-            background-color: #00AFFF;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 20px;
-            transition: left 0.5s ease-in-out;
-            z-index: 1000;
-        }
-
-        .announcement-popup.show {
-            left: 2px; 
-        }
-
-        .announcement-content {
-            position: relative;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            font-size: 20px;
-            cursor: pointer;
-            background-color: #fff;
-            border-radius: 50%;
-            width: 3px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-        }
-
-        .close-btn:hover {
-            background-color: #f0f0f0;
-        }
-    </style>
-</head>
-<body>
-    <div class="announcement-popup" id="announcementPopup">
-        <div class="announcement-content">
-            <span class="close-btn" id="closeBtn">&times;</span>
-            <p id="announcementText">公告加载中...</p>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const popup = document.getElementById('announcementPopup');
-            const closeBtn = document.getElementById('closeBtn');
-            const announcementText = document.getElementById('announcementText');
-
-            
-            popup.classList.add('show');
-
-           
-            fetch('')
-                .then(response => response.json())
-                .then(data => {
-                    announcementText.textContent = data.data; 
-                })
-                .catch(error => {
-                    console.error('获取公告内容失败:', error);
-                    announcementText.textContent = '公告加载失败，请稍后重试。';
-                });
-
-           
-            closeBtn.addEventListener('click', function() {
-                popup.classList.remove('show');
-                setTimeout(() => {
-                    popup.style.display = 'none'; 
-                }, 500); 
-            });
-        });
-    </script>
-</body>
-</html>
-
-    <title>应用使用说明</title>
-    <style>
-        /* 帮助图标样式 */
-        .help-icon {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 30px;
-            height: 30px;
-            background-color: #3498db;
-            color: white;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 30px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        
-        /* 弹窗样式 */
-        .help-modal {
-            display: none;
-            position: fixed;
-            top: 60px;
-            right: 20px;
-            width: 300px;
-            background-color: #DF7800;
-            border-radius: 5px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-            z-index: 1000;
-            padding: 15px;
-            border: 1px solid #ddd;
-        }
-        
-        .help-modal h3 {
-            margin-top: 0;
-            color: #3498db;
-        }
-        
-        .help-modal p {
-            margin-bottom: 10px;
-            line-height: 1.5;
-        }
-        
-        /* 遮罩层样式 */
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.3);
-            z-index: 999;
-        }
-        
-        /* 关闭按钮样式 */
-        .close-btn {
-            position: absolute;
-            top: 5px;
-            right: 10px;
-            font-size: 20px;
-            cursor: pointer;
-            color: #777;
-        }
-    </style>
-</head>
-<body>
-    <div class="help-icon" id="helpIcon">?</div>
-    
-   
-    <div class="help-modal" id="helpModal">
-        <span class="close-btn" id="closeBtn">&times;</span>
-        <h3>Mango听书使用说明</h3>
-        <p>1. ©2022-2025 Mango</p>
-        <p>2. 本站不收集任何信息，最终解释权在法律之内归Mango所有</p>
-        <p>3. 可以下载音频，在文件管理Download文件夹查看</p>
-        <p>4. 在搜索点一本书时，目录显示在书架上</p>
-        <p>5.当前书源应该仅支持番茄，下个版本更新喜马拉雅</p>
-        <p>6.有任何问题联系我</p>
-        <p>7.基于zc听书https://zcfx.vvvv.ee/zcts</p>
-    </div>
-    
-  
-    <div class="overlay" id="overlay"></div>
-    
-    <script>
-        // 获取DOM元素
-        const helpIcon = document.getElementById('helpIcon');
-        const helpModal = document.getElementById('helpModal');
-        const closeBtn = document.getElementById('closeBtn');
-        const overlay = document.getElementById('overlay');
-        
-        // 点击帮助图标显示弹窗
-        helpIcon.addEventListener('click', function() {
-            helpModal.style.display = 'block';
-            overlay.style.display = 'block';
-        });
-        
-        // 点击关闭按钮隐藏弹窗
-        closeBtn.addEventListener('click', function() {
-            helpModal.style.display = 'none';
-            overlay.style.display = 'none';
-        });
-        
-        // 点击遮罩层隐藏弹窗
-        overlay.addEventListener('click', function() {
-            helpModal.style.display = 'none';
-            overlay.style.display = 'none';
-        });
-    </script>
-</body>
-    </html>
-
