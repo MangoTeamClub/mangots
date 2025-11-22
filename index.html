@@ -23,6 +23,22 @@
             --border-radius: 8px;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        :root[data-theme="light"] {
+            --primary: #FF8C00;
+            --primary-dark: #E67E00;
+            --primary-light: rgba(255, 140, 0, 0.1);
+            --dark-bg: #f5f5f5;
+            --dark-surface: #ffffff;
+            --dark-surface-hover: #f0f0f0;
+            --dark-surface-active: #e8e8e8;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --divider: #e0e0e0;
+            --error: #d32f2f;
+            --success: #388e3c;
+            --warning: #f57c00;
+        }
         
         * {
             margin: 0;
@@ -37,17 +53,32 @@
             line-height: 1.6;
             padding-bottom: 150px;
             -webkit-font-smoothing: antialiased;
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.5;
         }
         
         .container {
             max-width: 900px;
             margin: 0 auto;
             padding: 15px;
+            position: relative;
+            z-index: 1;
         }
         
         header {
             background-color: var(--dark-surface);
-            color: white;
+            color: var(--text-primary);
             padding: 15px 0;
             text-align: center;
             position: sticky;
@@ -313,7 +344,7 @@
             background: none;
             border: none;
             font-size: 18px;
-            color: white;
+            color: var(--text-primary);
             margin-right: 15px;
             cursor: pointer;
             transition: var(--transition);
@@ -389,7 +420,6 @@
             border-left: 3px solid var(--primary);
         }
         
-        /* 播放器样式 */
         .audio-player-container {
             position: fixed;
             bottom: 0;
@@ -423,7 +453,6 @@
             height: 60px;
         }
         
-        /* 自定义音频控件样式 */
         audio {
             width: 100%;
             background-color: var(--dark-surface);
@@ -505,7 +534,6 @@
             text-align: right;
         }
         
-        /* 播放控制按钮样式 */
         .player-controls {
             display: flex;
             justify-content: center;
@@ -544,7 +572,6 @@
             color: white;
         }
         
-        /* 书架空状态 */
         .empty-state {
             text-align: center;
             padding: 40px 20px;
@@ -563,7 +590,6 @@
             margin-bottom: 20px;
         }
         
-        /* 帮助图标样式 */
         .help-icon {
             position: fixed;
             top: 20px;
@@ -580,7 +606,6 @@
             z-index: 1000;
         }
         
-        /* 弹窗样式 */
         .help-modal {
             display: none;
             position: fixed;
@@ -604,7 +629,6 @@
             line-height: 1.5;
         }
         
-        /* 遮罩层样式 */
         .overlay {
             display: none;
             position: fixed;
@@ -616,7 +640,6 @@
             z-index: 999;
         }
         
-        /* 关闭按钮样式 */
         .close-btn {
             position: absolute;
             top: 5px;
@@ -626,7 +649,37 @@
             color: var(--text-secondary);
         }
         
-        /* 响应式调整 */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 30px;
+            height: 30px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+        
+        .particles-toggle {
+            position: fixed;
+            top: 60px;
+            left: 20px;
+            width: 30px;
+            height: 30px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            cursor: pointer;
+            z-index: 1000;
+            font-size: 14px;
+        }
+        
         @media (max-width: 600px) {
             .container {
                 padding: 10px;
@@ -661,15 +714,25 @@
     </style>
 </head>
 <body>
+    <div id="particles-js"></div>
+    
+    <div class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </div>
+    
+    <div class="particles-toggle" id="particlesToggle">
+        <i class="fas fa-sparkles"></i>
+    </div>
+    
     <header>
         <button id="backBtn" class="back-btn hidden"><i class="fas fa-arrow-left"></i></button>
-        <h1 id="pageTitle">Mango听书 <span style="font-size: 0.8em; color: var(--primary);">Pro max</span></h1>
+        <h1 id="pageTitle">Mango听书</h1>
         <button id="shelfBtn" class="back-btn hidden" style="left: auto; right: 15px;"><i class="fas fa-bookmark"></i></button>
     </header>
     
     <div class="container">
         <div class="search-box">
-            <input type="text" id="searchInput" class="search-input" placeholder="当你点击一本书后，请在书架查看">
+            <input type="text" id="searchInput" class="search-input" placeholder="搜索书籍">
             <button id="searchBtn" class="search-btn"><i class="fas fa-search"></i> 搜索</button>
         </div>
         
@@ -679,13 +742,10 @@
             <button class="tab-btn" id="historyTab"><i class="fas fa-history"></i> 历史</button>
         </div>
         
-        <div class="tab-content active" id="searchResults">
-            <!-- 搜索结果将在这里显示 -->
-        </div>
+        <div class="tab-content active" id="searchResults"></div>
         
         <div class="tab-content" id="shelfContent">
             <div id="shelfList" class="shelf-list">
-                <!-- 书架内容将在这里显示 -->
                 <div class="empty-state">
                     <div class="empty-icon"><i class="fas fa-book-open"></i></div>
                     <div class="empty-text">书架空空如也</div>
@@ -696,7 +756,6 @@
         
         <div class="tab-content" id="historyContent">
             <div id="historyList" class="shelf-list">
-                <!-- 历史记录将在这里显示 -->
                 <div class="empty-state">
                     <div class="empty-icon"><i class="fas fa-clock"></i></div>
                     <div class="empty-text">暂无收听历史</div>
@@ -706,9 +765,7 @@
         
         <div id="bookDetails" class="hidden">
             <h2 id="bookTitle"></h2>
-            <div id="chapterList" class="chapter-list">
-                <!-- 章节列表将在这里显示 -->
-            </div>
+            <div id="chapterList" class="chapter-list"></div>
             
             <div class="batch-download-panel hidden" id="batchDownloadPanel">
                 <div class="batch-download-header">
@@ -733,25 +790,20 @@
         </div>
     </div>
     
-    <!-- 帮助图标和说明 -->
     <div class="help-icon" id="helpIcon">?</div>
     
     <div class="help-modal" id="helpModal">
         <span class="close-btn" id="closeBtn">&times;</span>
         <h3>Mango听书使用说明</h3>
-        <p>1. ©2022-2025 Mango</p>
-        <p>2. 本站不收集任何信息，最终解释权在法律之内归Mango所有</p>
-        <p>3. 可以下载音频，在文件管理Download文件夹查看</p>
-        <p>4. 在搜索点一本书时，目录显示在书架上</p>
-        <p>5.当前书源应该仅支持番茄，下个版本更新喜马拉雅</p>
-        <p>6.有任何问题联系我</p>
-        <p>7.基于zc听书https://zcfx.vvvv.ee/zcts</p>
+        <p>1. 搜索书籍并添加到书架</p>
+        <p>2. 在书架中查看书籍目录</p>
+        <p>3. 点击章节播放或下载</p>
     </div>
     
     <div class="overlay" id="overlay"></div>
 
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        // 全局变量
         const API_BASE = 'https://sdkapi.hhlqilongzhu.cn/api/fanqie_tingshu/';
         const API_KEY = 'Dragon53FA6A7389AB20A25A6CE425264A4B6A';
         
@@ -762,9 +814,8 @@
         let currentAudioIndex = -1;
         let selectedChapters = new Set();
         let lastRequestTime = 0;
-        const REQUEST_INTERVAL = 2000; // 2秒内最多5次请求 = 每10秒25次
+        const REQUEST_INTERVAL = 2000;
         
-        // DOM元素
         const searchInput = document.getElementById('searchInput');
         const searchBtn = document.getElementById('searchBtn');
         const searchResults = document.getElementById('searchResults');
@@ -793,13 +844,16 @@
         const historyList = document.getElementById('historyList');
         const exploreBooksBtn = document.getElementById('exploreBooksBtn');
         
-        // 帮助系统
         const helpIcon = document.getElementById('helpIcon');
         const helpModal = document.getElementById('helpModal');
         const closeBtn = document.getElementById('closeBtn');
         const overlay = document.getElementById('overlay');
         
-        // 初始化本地存储
+        // 主题切换和粒子效果元素
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const particlesToggle = document.getElementById('particlesToggle');
+        
         function initStorage() {
             if (!localStorage.getItem('bookShelf')) {
                 localStorage.setItem('bookShelf', JSON.stringify([]));
@@ -807,14 +861,18 @@
             if (!localStorage.getItem('listenHistory')) {
                 localStorage.setItem('listenHistory', JSON.stringify([]));
             }
+            if (!localStorage.getItem('theme')) {
+                localStorage.setItem('theme', 'dark');
+            }
+            if (!localStorage.getItem('particlesEnabled')) {
+                localStorage.setItem('particlesEnabled', 'true');
+            }
         }
         
-        // 获取书架
         function getBookShelf() {
             return JSON.parse(localStorage.getItem('bookShelf')) || [];
         }
         
-        // 添加到书架
         function addToShelf(book) {
             const shelf = getBookShelf();
             if (!shelf.some(b => b.book_id === book.book_id)) {
@@ -827,7 +885,6 @@
             return false;
         }
         
-        // 从书架移除
         function removeFromShelf(bookId) {
             const shelf = getBookShelf();
             const newShelf = shelf.filter(b => b.book_id !== bookId);
@@ -837,18 +894,15 @@
             return true;
         }
         
-        // 检查是否在书架中
         function isInShelf(bookId) {
             const shelf = getBookShelf();
             return shelf.some(b => b.book_id === bookId);
         }
         
-        // 获取收听历史
         function getListenHistory() {
             return JSON.parse(localStorage.getItem('listenHistory')) || [];
         }
         
-        // 添加到收听历史
         function addToHistory(book, chapterIndex) {
             const history = getListenHistory();
             const existingIndex = history.findIndex(item => item.book.book_id === book.book_id);
@@ -863,7 +917,6 @@
                 timestamp: Date.now()
             });
             
-            // 只保留最近的50条记录
             if (history.length > 50) {
                 history.pop();
             }
@@ -871,7 +924,6 @@
             localStorage.setItem('listenHistory', JSON.stringify(history));
         }
         
-        // 更新书架按钮状态
         function updateShelfToggleBtn() {
             if (!currentBook) return;
             
@@ -887,14 +939,13 @@
             }
         }
         
-        // 显示书架
         function displayShelf() {
             const shelf = getBookShelf();
             if (shelf.length === 0) {
                 shelfList.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-icon"><i class="fas fa-book-open"></i></div>
-                        <div class="empty-text">书架空空如也（请点击右上"？"查看说明）</div>
+                        <div class="empty-text">书架空空如也</div>
                         <button class="page-btn" id="exploreBooksBtn">去发现好书</button>
                     </div>
                 `;
@@ -945,7 +996,6 @@
             shelfList.appendChild(shelfContainer);
         }
         
-        // 显示收听历史
         function displayHistory() {
             const history = getListenHistory();
             if (history.length === 0) {
@@ -1001,7 +1051,6 @@
             historyList.appendChild(historyContainer);
         }
         
-        // 节流函数 - 限制请求频率
         function throttleRequest() {
             const now = Date.now();
             if (now - lastRequestTime < REQUEST_INTERVAL) {
@@ -1009,6 +1058,156 @@
             }
             lastRequestTime = now;
             return true;
+        }
+        
+        // 主题切换功能
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            if (currentTheme === 'light') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeIcon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                themeIcon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'light');
+            }
+            updateParticlesColor();
+        }
+        
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            themeIcon.className = savedTheme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+        
+        // 粒子效果功能
+        function initParticles() {
+            const particlesEnabled = localStorage.getItem('particlesEnabled') !== 'false';
+            
+            if (particlesEnabled) {
+                particlesJS('particles-js', {
+                    particles: {
+                        number: {
+                            value: 80,
+                            density: {
+                                enable: true,
+                                value_area: 800
+                            }
+                        },
+                        color: {
+                            value: getParticlesColor()
+                        },
+                        shape: {
+                            type: 'circle',
+                            stroke: {
+                                width: 0,
+                                color: '#000000'
+                            }
+                        },
+                        opacity: {
+                            value: 0.5,
+                            random: true,
+                            anim: {
+                                enable: true,
+                                speed: 1,
+                                opacity_min: 0.1,
+                                sync: false
+                            }
+                        },
+                        size: {
+                            value: 3,
+                            random: true,
+                            anim: {
+                                enable: true,
+                                speed: 2,
+                                size_min: 0.1,
+                                sync: false
+                            }
+                        },
+                        line_linked: {
+                            enable: true,
+                            distance: 150,
+                            color: getParticlesColor(),
+                            opacity: 0.4,
+                            width: 1
+                        },
+                        move: {
+                            enable: true,
+                            speed: 1,
+                            direction: 'none',
+                            random: true,
+                            straight: false,
+                            out_mode: 'out',
+                            bounce: false,
+                            attract: {
+                                enable: false,
+                                rotateX: 600,
+                                rotateY: 1200
+                            }
+                        }
+                    },
+                    interactivity: {
+                        detect_on: 'canvas',
+                        events: {
+                            onhover: {
+                                enable: true,
+                                mode: 'grab'
+                            },
+                            onclick: {
+                                enable: true,
+                                mode: 'push'
+                            },
+                            resize: true
+                        },
+                        modes: {
+                            grab: {
+                                distance: 140,
+                                line_linked: {
+                                    opacity: 1
+                                }
+                            },
+                            push: {
+                                particles_nb: 4
+                            }
+                        }
+                    },
+                    retina_detect: true
+                });
+            } else {
+                document.getElementById('particles-js').innerHTML = '';
+            }
+        }
+        
+        function getParticlesColor() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            return currentTheme === 'light' ? '#333333' : '#ffffff';
+        }
+        
+        function updateParticlesColor() {
+            if (particlesJS) {
+                particlesJS('particles-js', {
+                    particles: {
+                        color: {
+                            value: getParticlesColor()
+                        },
+                        line_linked: {
+                            color: getParticlesColor()
+                        }
+                    }
+                });
+            }
+        }
+        
+        function toggleParticles() {
+            const particlesEnabled = localStorage.getItem('particlesEnabled') !== 'false';
+            localStorage.setItem('particlesEnabled', !particlesEnabled);
+            
+            if (!particlesEnabled) {
+                initParticles();
+            } else {
+                document.getElementById('particles-js').innerHTML = '';
+            }
         }
         
         // 事件监听
@@ -1027,6 +1226,10 @@
         nextBtn.addEventListener('click', playNextChapter);
         audioPlayer.addEventListener('ended', handleAudioEnded);
         audioPlayer.addEventListener('timeupdate', savePlaybackPosition);
+        
+        // 主题和粒子效果事件
+        themeToggle.addEventListener('click', toggleTheme);
+        particlesToggle.addEventListener('click', toggleParticles);
         
         // 标签切换
         searchTab.addEventListener('click', () => switchTab('search'));
@@ -1204,7 +1407,6 @@
                         currentChapters = data.data;
                         displayChapters();
                         
-                        // 更新UI显示书籍详情
                         bookTitle.textContent = book.title;
                         bookDetails.classList.remove('hidden');
                         searchResults.classList.add('hidden');
@@ -1212,15 +1414,12 @@
                         historyContent.classList.add('hidden');
                         batchDownloadPanel.classList.remove('hidden');
                         
-                        // 更新标题和返回按钮
                         pageTitle.textContent = book.title;
                         backBtn.classList.remove('hidden');
                         shelfBtn.classList.remove('hidden');
                         
-                        // 更新书架按钮状态
                         updateShelfToggleBtn();
                         
-                        // 如果有指定播放的章节，直接播放
                         if (playIndex !== -1 && playIndex < currentChapters.length) {
                             playChapter(playIndex);
                         }
@@ -1261,14 +1460,12 @@
                     </div>
                 `;
                 
-                // 点击整行播放
                 chapterItem.addEventListener('click', (e) => {
                     if (!e.target.closest('.chapter-actions') && !e.target.closest('input[type="checkbox"]')) {
                         playChapter(index);
                     }
                 });
                 
-                // 复选框选择
                 const checkbox = chapterItem.querySelector('input[type="checkbox"]');
                 checkbox.addEventListener('change', (e) => {
                     if (e.target.checked) {
@@ -1279,7 +1476,6 @@
                     updateBatchDownloadButton();
                 });
                 
-                // 下载按钮
                 const downloadBtn = chapterItem.querySelector('.download-btn');
                 downloadBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -1289,18 +1485,14 @@
                 chapterList.appendChild(chapterItem);
             });
             
-            // 更新批量下载按钮状态
             updateBatchDownloadButton();
-            // 更新上下章节按钮状态
             updateChapterNavButtons();
         }
         
-        // 更新批量下载按钮状态
         function updateBatchDownloadButton() {
             batchDownloadBtn.disabled = selectedChapters.size === 0;
         }
         
-        // 更新上下章节按钮状态
         function updateChapterNavButtons() {
             prevBtn.disabled = currentAudioIndex <= 0;
             nextBtn.disabled = currentAudioIndex >= currentChapters.length - 1;
@@ -1324,31 +1516,24 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.code === 200 && data.data && data.data.url) {
-                        // 高亮当前播放章节
                         highlightPlayingChapter();
                         
-                        // 显示播放器容器
                         playerContainer.classList.remove('hidden');
                         playerInfo.textContent = `${currentBook.title} - ${chapter.title}`;
                         
-                        // 设置音频播放器源
                         audioPlayer.src = data.data.url;
                         audioPlayer.load();
                         
-                        // 尝试恢复播放位置
                         restorePlaybackPosition();
                         
                         audioPlayer.play().catch(e => {
                             console.log('自动播放被阻止，用户需要手动点击播放');
                         });
                         
-                        // 更新按钮状态
                         updateChapterNavButtons();
                         
-                        // 重新显示章节列表
                         displayChapters();
                         
-                        // 添加到收听历史
                         addToHistory(currentBook, currentAudioIndex);
                     } else {
                         showError(data.msg || '获取播放链接失败');
@@ -1374,7 +1559,6 @@
                 progressElement.textContent = ` ${Math.round(progress)}%`;
             }
             
-            // 保存到本地存储
             const history = getListenHistory();
             const itemIndex = history.findIndex(item => item.book.book_id === currentBook.book_id);
             
@@ -1418,11 +1602,10 @@
         
         // 处理音频播放结束
         function handleAudioEnded() {
-            // 自动播放下一个章节
             if (currentAudioIndex < currentChapters.length - 1) {
                 setTimeout(() => {
                     playChapter(currentAudioIndex + 1);
-                }, 500); // 添加短暂延迟
+                }, 500);
             }
         }
         
@@ -1442,7 +1625,6 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.code === 200 && data.data && data.data.url) {
-                        // 创建下载链接
                         const a = document.createElement('a');
                         a.href = data.data.url;
                         a.download = `${currentBook.title}_${chapter.title}.mp3`;
@@ -1450,7 +1632,6 @@
                         a.click();
                         document.body.removeChild(a);
                         
-                        // 重新显示章节列表
                         displayChapters();
                     } else {
                         showError(data.msg || '获取下载链接失败');
@@ -1476,8 +1657,7 @@
             const total = chaptersToDownload.length;
             let downloaded = 0;
             
-            // 限制并发下载数量
-            const MAX_CONCURRENT = 1; // 设置为1以确保严格的速率限制
+            const MAX_CONCURRENT = 1;
             let currentConcurrent = 0;
             
             function downloadNext() {
@@ -1495,7 +1675,6 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.code === 200 && data.data && data.data.url) {
-                            // 创建下载链接
                             const a = document.createElement('a');
                             a.href = data.data.url;
                             a.download = `${currentBook.title}_${chapter.title}.mp3`;
@@ -1508,14 +1687,12 @@
                             downloadProgressBar.style.width = `${(downloaded / total) * 100}%`;
                             
                             if (downloaded < total) {
-                                // 延迟下一个下载以确保速率限制
                                 setTimeout(downloadNext, REQUEST_INTERVAL);
                             } else {
                                 downloadStatus.textContent = `下载完成 (${downloaded}/${total})`;
                                 batchDownloadBtn.disabled = false;
                             }
                             
-                            // 继续下载队列中的下一个
                             downloadNext();
                         } else {
                             currentConcurrent--;
@@ -1531,7 +1708,6 @@
                     });
             }
             
-            // 开始下载
             for (let i = 0; i < Math.min(MAX_CONCURRENT, total); i++) {
                 setTimeout(downloadNext, i * REQUEST_INTERVAL);
             }
@@ -1540,7 +1716,6 @@
         // 返回上一页
         function goBack() {
             if (!bookDetails.classList.contains('hidden')) {
-                // 从书籍详情返回搜索结果
                 bookDetails.classList.add('hidden');
                 searchResults.classList.remove('hidden');
                 shelfContent.classList.add('hidden');
@@ -1606,7 +1781,6 @@
             chapters.forEach((item, index) => {
                 if (index === currentAudioIndex) {
                     item.classList.add('now-playing');
-                    // 滚动到可见区域
                     item.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 } else {
                     item.classList.remove('now-playing');
@@ -1655,6 +1829,8 @@
         // 初始化
         function init() {
             initStorage();
+            loadTheme();
+            initParticles();
             displayShelf();
             displayHistory();
         }
